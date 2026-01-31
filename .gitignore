@@ -43,6 +43,8 @@ outputs/
 *.pdf
 *.html
 *.log
+*.pyc
+
 
 # Data
 data/*
