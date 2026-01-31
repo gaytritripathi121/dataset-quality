@@ -1,0 +1,156 @@
+
+# General Settings
+general:
+  project_name: "Dataset Quality Auditor"
+  version: "1.0.1"
+  random_seed: 42
+  verbose: true
+
+# Data Loading
+data_loading:
+  max_file_size_mb: 1000
+  supported_formats:
+    tabular: ["csv", "xlsx", "parquet", "json"]
+    image: ["jpg", "jpeg", "png", "bmp"]
+    text: ["txt", "csv"]
+  sample_size_for_preview: 5
+  chunk_size: 10000
+
+# Quality Thresholds 
+quality_thresholds:
+  missing_values:
+    excellent: 0.01  # < 1% missing
+    good: 0.05       # < 5% missing
+    fair: 0.10       # < 10% missing
+    poor: 0.20       # >= 20% missing
+  
+  duplicates:
+    excellent: 0.005 # < 0.5% duplicates
+    good: 0.01       # < 1% duplicates
+    fair: 0.05       # < 5% duplicates
+    poor: 0.10       # >= 10% duplicates
+  
+  # CRITICAL FIX: More realistic class imbalance thresholds
+  class_imbalance:
+    excellent: 2.0   # ratio < 2:1 (very balanced)
+    good: 5.0        # ratio < 5:1 (mild imbalance - NORMAL!)
+    fair: 10.0       # ratio < 10:1 (moderate - manageable)
+    poor: 20.0       # ratio >= 20:1 (severe)
+  
+  # CRITICAL FIX: Anomalies are statistical, not errors
+  anomalies:
+    excellent: 0.05  # < 5% (expected statistical variation)
+    good: 0.10       # < 10% (acceptable)
+    fair: 0.15       # < 15% (review recommended)
+    poor: 0.25       # >= 25% (possible issue)
+  
+  outliers:
+    z_score_threshold: 3.0
+    iqr_multiplier: 1.5
+
+# Scoring Weights - VERIFIED TO SUM TO 1.0
+scoring:
+  completeness_weight: 0.25
+  consistency_weight: 0.25
+  balance_weight: 0.25
+  integrity_weight: 0.25
+  
+  # Score interpretation ranges
+  score_ranges:
+    excellent: 90      # 90-100: Excellent
+    very_good: 80      # 80-89: Very Good
+    good: 70           # 70-79: Good
+    acceptable: 60     # 60-69: Acceptable
+    fair: 50           # 50-59: Fair
+    poor: 0            # 0-49: Poor
+
+# Machine Learning Models - ADJUSTED
+ml_models:
+  isolation_forest:
+    n_estimators: 100
+    max_samples: 256
+    contamination: 0.05  # Changed from 0.1 (less aggressive)
+    random_state: 42
+    n_jobs: -1
+  
+  autoencoder:
+    encoding_dim: 16
+    hidden_layers: [64, 32]
+    epochs: 30           # Reduced from 50 for speed
+    batch_size: 32
+    validation_split: 0.2
+    early_stopping_patience: 5
+    learning_rate: 0.001
+    # Anomaly threshold percentile (95th = top 5% reconstruction errors)
+    threshold_percentile: 95
+  
+  embedding_detector:
+    n_components_pca: 50
+    clustering_n_clusters: 5
+    distance_threshold_percentile: 95
+
+# Image Processing
+image_processing:
+  target_size: [224, 224]
+  pretrained_model: "MobileNetV2"
+  batch_size: 32
+  augmentation: false
+  quality_checks:
+    - "blur_detection"
+    - "brightness_check"
+    - "contrast_check"
+    - "corruption_detection"
+
+# Text Processing
+text_processing:
+  max_length: 512
+  pretrained_model: "sentence-transformers/all-MiniLM-L6-v2"
+  language: "en"
+  quality_checks:
+    - "length_check"
+    - "encoding_check"
+
+# Visualization
+visualization:
+  figure_size: [12, 8]
+  dpi: 100
+  style: "seaborn-v0_8-darkgrid"
+  color_palette: "husl"
+  save_format: "png"
+  max_features_to_plot: 20
+
+# Reporting
+reporting:
+  output_format: ["html", "json", "txt"]
+  include_visualizations: true
+  include_recommendations: true
+  max_issues_to_show: 10
+  generate_summary: true
+  # Show calculation transparency
+  show_score_calculation: true
+
+# Logging
+logging:
+  level: "INFO"
+  log_to_file: true
+  log_file_path: "outputs/logs/audit.log"
+  log_format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}"
+
+# Performance
+performance:
+  enable_multiprocessing: true
+  n_workers: 4
+  cache_enabled: true
+  cache_dir: "outputs/cache/"
+  memory_limit_gb: 8
+
+# Advanced Features
+advanced:
+  enable_drift_detection: false    # Set to false for single dataset audit
+  enable_feature_importance: true
+  enable_correlation_analysis: true
+  enable_data_profiling: true
+  generate_sample_datasets: false
+  
+  # Debug mode - shows score calculations
+  debug_mode: true
