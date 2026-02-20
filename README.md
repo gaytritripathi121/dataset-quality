@@ -17,7 +17,7 @@ A production-ready ML pipeline that automatically evaluates dataset quality and 
 ```bash
 # Clone repository
 git clone https://github.com/yourusername/dataset-quality-auditor.git
-cd dataset-quality-auditor
+cd dataset-quality
 
 # Create virtual environment
 python -m venv venv
@@ -121,13 +121,6 @@ Overall Score = 0.25 × Completeness +
 - **Data Pipeline Monitoring** - Continuous quality assessment
 - **Exploratory Analysis** - Quick dataset health check
 - **ML Pipeline Integration** - Automated quality gates
-
-
-##  Author
-
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
 
 ##  Acknowledgments
 
